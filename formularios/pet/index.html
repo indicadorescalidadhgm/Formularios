@@ -125,8 +125,8 @@ const urlScript="https://script.google.com/macros/s/AKfycbx_Hw8Q7C8y7vRmj0EcIQ8n
 document.getElementById("formRiesgo").addEventListener("submit",function(e){
 e.preventDefault();
 
-const episodio = document.querySelector('input[name="Episodio"]').value;
-const documento = document.querySelector('input[name="Documento"]').value;
+const episodio = document.querySelector('input[name="episodio"]').value;
+const documento = document.querySelector('input[name="documento"]').value;
 
 const etapa=document.querySelector('input[name="etapa"]:checked')?.value;
 if(!etapa){mostrar("Seleccione etapa.",true);return;}
@@ -212,8 +212,8 @@ resultado="Sin criterios registrados.";
 fetch(urlScript,{
 method:"POST",
 body:new URLSearchParams({
-episodio: Episodio,
-documento: Documento,
+episodio: episodio,
+documento: documento,
 etapa: etapa,
 resultado: resultado
 })
