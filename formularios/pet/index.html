@@ -31,7 +31,7 @@ button{margin-top:20px;padding:12px;width:100%;background:#0066cc;color:white;bo
 
 <h2>🔴 MUY ALTO</h2>
 <div class="categoria rojo">
-<label><input type="checkbox" class="muyalto"> Trombofilia heredada muy alto riesgo</label>
+<label><input type="checkbox" class="muyalto"> Trombofilia heredada de muy alto riesgo</label>
 <label><input type="checkbox" class="muyalto"> Trombofilia adquirida o heredada con evento tromboembólico
 venoso previo (EVT).</label>
 <label><input type="checkbox" class="muyalto"> EVT recurrente (2 o más)</label>
@@ -39,7 +39,7 @@ venoso previo (EVT).</label>
 
 <h2>🟠 ALTO</h2>
 <div class="categoria naranja">
-<label><input type="checkbox" class="alto grupoA"> Obesidad mórbida pregestacional (IMC > 40)</label>
+<label><input type="checkbox" class="alto grupoA"> Obesidad mórbida pregestacional (IMC > 40 kgm/m)</label>
 <label><input type="checkbox" class="alto grupoA"> Trombofilia alto riesgo o adquirida (SAAF)</label>
 <label><input type="checkbox" class="alto grupoA"> EVT previo</label>
 <label><input type="checkbox" class="alto grupoA"> Enfermedad del colágeno: lupus eritematoso
@@ -48,33 +48,41 @@ sistémico, artritis reumatoidea, dermatomiositis.</label>
 
 <label><input type="checkbox" class="alto hiper"> Síndrome de hiperestimulación ovárica</label>
 <label><input type="checkbox" class="alto sepsis"> Sepsis puerperal</label>
-<label><input type="checkbox" class="alto hosp3"> Hospitalización > 3 días</label>
+<label><input type="checkbox" class="alto hosp3"> Gestante o mujer en puerperio hospitalizada
+> 3 días</label>
 </div>
 
 <h2>🟡 MODERADO</h2>
 <div class="categoria amarillo">
-<label><input type="checkbox" class="moderado acumMod"> IMC 30-39</label>
-<label><input type="checkbox" class="moderado acumMod"> Várices</label>
-<label><input type="checkbox" class="moderado acumMod"> Diabetes</label>
-<label><input type="checkbox" class="moderado acumMod"> Enf. Renal</label>
-<label><input type="checkbox" class="moderado acumMod"> Parto pretérmino</label>
-<label><input type="checkbox" class="moderado acumMod"> Cesárea</label>
-<label><input type="checkbox" class="moderado acumMod"> Preeclampsia</label>
-<label><input type="checkbox" class="moderado acumMod"> Hemorragia</label>
+<label><input type="checkbox" class="moderado acumMod"> Obesidad pregestacional (IMC > 30-39 kg/m2)</label>
+<label><input type="checkbox" class="moderado acumMod"> Várices en miembros inferiores</label>
+<label><input type="checkbox" class="moderado acumMod"> Diabetes tipo I y tipo II</label>
+<label><input type="checkbox" class="moderado acumMod"> Enfermedad renal preexistente</label>
+<label><input type="checkbox" class="moderado acumMod"> Técnicas de reproducción asistida</label>
 <label><input type="checkbox" class="moderado acumMod"> Embarazo múltiple</label>
-<label><input type="checkbox" class="moderado hospMenor"> Hospitalización < 3 días</label>
+<label><input type="checkbox" class="moderado acumMod"> Hemorragia posparto</label>
+<label><input type="checkbox" class="moderado acumMod"> Preeclampsia</label>
+<label><input type="checkbox" class="moderado acumMod"> Hiperémesis gravídica (alteración hidroelectrolítica o parto pretérmino)</label>
+<label><input type="checkbox" class="moderado acumMod"> Cesárea</label>
+<label><input type="checkbox" class="moderado acumMod"> Sepsis durante el embarazo</label>
+<label><input type="checkbox" class="moderado acumMod"> Enfermedad inflamatoria intestinal</label>
+<label><input type="checkbox" class="moderado acumMod"> Procedimiento quirúrgico en embarazo o puerperio</label>
+<label><input type="checkbox" class="moderado acumMod"> Transfusión > 2 unidades</label>
+<label><input type="checkbox" class="moderado hospMenor"> Gestante o mujer en puerperio hospitalizada
+< 3 días</label>
 </div>
 
 <h2>🟢 BAJO</h2>
 <div class="categoria verde">
-<label><input type="checkbox" class="bajo acumBajo"> Edad > 35</label>
-<label><input type="checkbox" class="bajo acumBajo"> IMC 25-30</label>
+<label><input type="checkbox" class="bajo acumBajo"> Edad > 35 años</label>
+<label><input type="checkbox" class="bajo acumBajo"> Sobrepeso pregestacional IMC 25-30 kg/m2</label>
 <label><input type="checkbox" class="bajo acumBajo"> Tabaquismo</label>
-<label><input type="checkbox" class="bajo acumBajo"> HTA crónica</label>
-<label><input type="checkbox" class="bajo acumBajo"> Inducción parto</label>
-<label><input type="checkbox" class="bajo acumBajo"> > 3 partos</label>
+<label><input type="checkbox" class="bajo acumBajo"> Hipertensión arterial crónica</label>
+<label><input type="checkbox" class="bajo acumBajo"> Hemorragia anteparto</label>
+<label><input type="checkbox" class="bajo acumBajo"> Inducción del trabajo de parto</label>
+<label><input type="checkbox" class="bajo acumBajo"> > 3 o más partos</label>
 <label><input type="checkbox" class="bajo acumBajo"> Corioamnionitis</label>
-<label><input type="checkbox" class="bajo acumBajo"> Viaje > 4h</label>
+<label><input type="checkbox" class="bajo acumBajo"> Viaje mayor de 4 horas</label>
 </div>
 
 <button type="submit">Evaluar y Guardar</button>
@@ -116,19 +124,19 @@ resultado=etapa==="Antenatal"
 /* 🟠 ALTO */
 else if(grupoA>0){
 resultado=etapa==="Antenatal"
-?"Tromboprofilaxis farmacológica desde identificación."
-:"Tromboprofilaxis farmacológica hasta 6 semanas posparto.";
+?"Tromboprofilaxis farmacológica antenatal desde el momento de su identificación."
+:"Tromboprofilaxis farmacológica posnatal hasta 6 semanas posparto.";
 }
 else if(hiper>0){
 if(etapa==="Antenatal"){
-resultado="Tromboprofilaxis farmacológica en I trimestre hasta resolución.";
+resultado="Tromboprofilaxis farmacológica en I trimestre y hasta que resuelva cuadro clínico.";
 }else{
 mostrar("No aplica en posnatal.",true);return;
 }
 }
 else if(sepsis>0){
 if(etapa==="Posnatal"){
-resultado="Tromboprofilaxis farmacológica por 10 días tras egreso.";
+resultado="Tromboprofilaxis farmacológica por 10 días posterior al egreso.";
 }else{
 mostrar("No aplica en antenatal.",true);return;
 }
@@ -143,12 +151,12 @@ resultado=etapa==="Antenatal"
 else if(mod>0){
 if(etapa==="Antenatal"){
 resultado=mod===1
-?"1 factor: Medidas generales."
-:"2 o más: Medidas NO farmacológicas toda la gestación.";
+?"1 factor: recomendaciones generales."
+:"2 o más: iniciar medidas no farmacológicas durante toda la gestación.";
 }else{
 resultado=mod===1
-?"1 factor: Medidas generales."
-:"2 o más: Tromboprofilaxis farmacológica por 10 días.";
+?"1 factor: recomendaciones generales."
+:"2 o más: tromboprofilaxis farmacológica por 10 días posparto.";
 }
 }
 else if(hospMenor>0){
@@ -160,12 +168,12 @@ resultado=etapa==="Antenatal"
 /* 🟢 BAJO */
 else if(bajo>0){
 if(etapa==="Antenatal"){
-if(bajo<=2) resultado="1-2 factores: Medidas generales.";
-else if(bajo<=5) resultado="3-5 factores: Medidas NO farmacológicas.";
-else resultado=">6 factores: Profilaxis farmacológica desde semana 28.";
+if(bajo<=2) resultado="1-2 factores: recomendaciones generales.";
+else if(bajo<=5) resultado="3-5 factores: iniciar medidas no farmacológicas desde el momento de su identificación.";
+else resultado=">6 factores: iniciar desde el momento de su identificación medidas no farmacológicas e iniciar tromboprofilaxis farmacológica desde semana 28, a menos que exista contraindicación.";
 }else{
-if(bajo<=2) resultado="1-2 factores: Medidas generales.";
-else resultado="3 o más: Tromboprofilaxis farmacológica por 10 días.";
+if(bajo<=2) resultado="1-2 factores: recomendaciones generales.";
+else resultado="3 o más: 10 días de tromboprofilaxis con medidas farmacológicas.";
 }
 }
 else{
@@ -179,9 +187,9 @@ body:new URLSearchParams({
 etapa:etapa,
 resultado:resultado
 })
-}).then(()=>mostrar("Guardado correctamente.",false))
+})
+.then(()=>mostrar(resultado,false))
 .catch(()=>mostrar("Error al guardar.",true));
-
 });
 
 function mostrar(t,e){
