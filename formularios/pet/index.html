@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Evaluación Riesgo Tromboembólico</title>
+<style>
+body{font-family:Arial;background:#f4f6f9;padding:40px;display:flex;justify-content:center;}
+.container{background:white;padding:30px;border-radius:10px;width:900px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+.categoria{padding:12px;border-radius:6px;margin-bottom:15px;}
+.rojo{background:#f8d7da;}
+.naranja{background:#ffe5b4;}
+.amarillo{background:#fff3cd;}
+.verde{background:#d4edda;}
+label{display:block;margin:5px 0;}
+button{margin-top:20px;padding:12px;width:100%;background:#0066cc;color:white;border:none;border-radius:6px;}
+.resultado{margin-top:20px;padding:15px;border-radius:6px;display:none;font-weight:bold;}
+.ok{background:#d4edda;}
+.error{background:#f8d7da;}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Evaluación de Riesgo Tromboembólico</h1>
+
+<form id="formRiesgo">
+
+<h2>Etapa</h2>
+<label><input type="radio" name="etapa" value="Antenatal" required> Antenatal</label>
+<label><input type="radio" name="etapa" value="Posnatal"> Posnatal</label>
+
+<h2>🔴 MUY ALTO</h2>
+<div class="categoria rojo">
+<label><input type="checkbox" class="muyalto"> Trombofilia heredada muy alto riesgo / EVT previo / EVT recurrente</label>
+</div>
+
+<h2>🟠 ALTO</h2>
+<div class="categoria naranja">
+<label><input type="checkbox" class="alto grupoA"> Obesidad mórbida (IMC > 40)</label>
+<label><input type="checkbox" class="alto grupoA"> Trombofilia alto riesgo o SAAF</label>
+<label><input type="checkbox" class="alto grupoA"> EVT previo</label>
+<label><input type="checkbox" class="alto grupoA"> Enfermedad del colágeno</label>
+<label><input type="checkbox" class="alto grupoA"> Óbito</label>
+
+<label><input type="checkbox" class="alto hiper"> Síndrome de hiperestimulación ovárica</label>
+<label><input type="checkbox" class="alto sepsis"> Sepsis puerperal</label>
+<label><input type="checkbox" class="alto hosp3"> Hospitalización > 3 días</label>
+</div>
+
+<h2>🟡 MODERADO</h2>
+<div class="categoria amarillo">
+<label><input type="checkbox" class="moderado acumMod"> IMC 30-39</label>
+<label><input type="checkbox" class="moderado acumMod"> Várices</label>
+<label><input type="checkbox" class="moderado acumMod"> Diabetes</label>
+<label><input type="checkbox" class="moderado acumMod"> Enf. Renal</label>
+<label><input type="checkbox" class="moderado acumMod"> Parto pretérmino</label>
+<label><input type="checkbox" class="moderado acumMod"> Cesárea</label>
+<label><input type="checkbox" class="moderado acumMod"> Preeclampsia</label>
+<label><input type="checkbox" class="moderado acumMod"> Hemorragia</label>
+<label><input type="checkbox" class="moderado acumMod"> Embarazo múltiple</label>
+<label><input type="checkbox" class="moderado hospMenor"> Hospitalización < 3 días</label>
+</div>
+
+<h2>🟢 BAJO</h2>
+<div class="categoria verde">
+<label><input type="checkbox" class="bajo acumBajo"> Edad > 35</label>
+<label><input type="checkbox" class="bajo acumBajo"> IMC 25-30</label>
+<label><input type="checkbox" class="bajo acumBajo"> Tabaquismo</label>
+<label><input type="checkbox" class="bajo acumBajo"> HTA crónica</label>
+<label><input type="checkbox" class="bajo acumBajo"> Inducción parto</label>
+<label><input type="checkbox" class="bajo acumBajo"> > 3 partos</label>
+<label><input type="checkbox" class="bajo acumBajo"> Corioamnionitis</label>
+<label><input type="checkbox" class="bajo acumBajo"> Viaje > 4h</label>
+</div>
+
+<button type="submit">Evaluar y Guardar</button>
+
+</form>
+
+<div id="mensaje" class="resultado"></div>
+
+</div>
+
+<script>
+
+const urlScript="https://script.google.com/macros/s/AKfycbyQF6LYI_qbCcVQaQLuLqclYaLjlyNnB2VsxAacYcenHLzQusedL1qtUSG0F9WgvXGVOw/exec";
+
+document.getElementById("formRiesgo").addEventListener("submit",function(e){
+e.preventDefault();
+
+const etapa=document.querySelector('input[name="etapa"]:checked')?.value;
+if(!etapa){mostrar("Seleccione etapa.",true);return;}
+
+const muyalto=document.querySelectorAll(".muyalto:checked").length;
+const grupoA=document.querySelectorAll(".grupoA:checked").length;
+const hiper=document.querySelectorAll(".hiper:checked").length;
+const sepsis=document.querySelectorAll(".sepsis:checked").length;
+const hosp3=document.querySelectorAll(".hosp3:checked").length;
+const mod=document.querySelectorAll(".acumMod:checked").length;
+const hospMenor=document.querySelectorAll(".hospMenor:checked").length;
+const bajo=document.querySelectorAll(".acumBajo:checked").length;
+
+let resultado="";
+
+/* 🔴 MUY ALTO */
+if(muyalto>0){
+resultado=etapa==="Antenatal"
+?"Anticoagulación desde identificación."
+:"Anticoagulación hasta al menos 6 semanas posparto.";
+}
+
+/* 🟠 ALTO */
+else if(grupoA>0){
+resultado=etapa==="Antenatal"
+?"Tromboprofilaxis farmacológica desde identificación."
+:"Tromboprofilaxis farmacológica hasta 6 semanas posparto.";
+}
+else if(hiper>0){
+if(etapa==="Antenatal"){
+resultado="Tromboprofilaxis farmacológica en I trimestre hasta resolución.";
+}else{
+mostrar("No aplica en posnatal.",true);return;
+}
+}
+else if(sepsis>0){
+if(etapa==="Posnatal"){
+resultado="Tromboprofilaxis farmacológica por 10 días tras egreso.";
+}else{
+mostrar("No aplica en antenatal.",true);return;
+}
+}
+else if(hosp3>0){
+resultado=etapa==="Antenatal"
+?"Tromboprofilaxis farmacológica durante estancia."
+:"Al alta: Medidas NO farmacológicas por 28 días.";
+}
+
+/* 🟡 MODERADO */
+else if(mod>0){
+if(etapa==="Antenatal"){
+resultado=mod===1
+?"1 factor: Medidas generales."
+:"2 o más: Medidas NO farmacológicas toda la gestación.";
+}else{
+resultado=mod===1
+?"1 factor: Medidas generales."
+:"2 o más: Tromboprofilaxis farmacológica por 10 días.";
+}
+}
+else if(hospMenor>0){
+resultado=etapa==="Antenatal"
+?"Tromboprofilaxis durante estancia."
+:"Al alta: Medidas NO farmacológicas por 10 días.";
+}
+
+/* 🟢 BAJO */
+else if(bajo>0){
+if(etapa==="Antenatal"){
+if(bajo<=2) resultado="1-2 factores: Medidas generales.";
+else if(bajo<=5) resultado="3-5 factores: Medidas NO farmacológicas.";
+else resultado=">6 factores: Profilaxis farmacológica desde semana 28.";
+}else{
+if(bajo<=2) resultado="1-2 factores: Medidas generales.";
+else resultado="3 o más: Tromboprofilaxis farmacológica por 10 días.";
+}
+}
+else{
+resultado="Sin criterios registrados.";
+}
+
+/* Guardar */
+fetch(urlScript,{
+method:"POST",
+body:new URLSearchParams({
+etapa:etapa,
+resultado:resultado
+})
+}).then(()=>mostrar("Guardado correctamente.",false))
+.catch(()=>mostrar("Error al guardar.",true));
+
+});
+
+function mostrar(t,e){
+const div=document.getElementById("mensaje");
+div.style.display="block";
+div.className="resultado "+(e?"error":"ok");
+div.textContent=t;
+}
+
+</script>
+</body>
+</html>
