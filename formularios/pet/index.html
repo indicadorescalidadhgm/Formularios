@@ -100,6 +100,9 @@ const urlScript="https://script.google.com/macros/s/AKfycbx_Hw8Q7C8y7vRmj0EcIQ8n
 document.getElementById("formRiesgo").addEventListener("submit",function(e){
 e.preventDefault();
 
+const episodio = document.querySelector('input[name="Episodio"]').value;
+const documento = document.querySelector('input[name="Documento"]').value;
+
 const etapa=document.querySelector('input[name="etapa"]:checked')?.value;
 if(!etapa){mostrar("Seleccione etapa.",true);return;}
 
@@ -143,37 +146,37 @@ mostrar("No aplica en antenatal.",true);return;
 }
 else if(hosp3>0){
 resultado=etapa==="Antenatal"
-?"Tromboprofilaxis farmacológica durante estancia."
-:"Al alta: Medidas NO farmacológicas por 28 días.";
+?"Durante la hospitalización: tromboprofilaxis con medidas farmacológicas Al alta: tromboprofilaxis con medidas no farmacológicas por 28 días."
+:"Durante la hospitalización: tromboprofilaxis con medidas farmacológicas Al alta: tromboprofilaxis con medidas no farmacológicas por 28 días.";
 }
 
 /* 🟡 MODERADO */
 else if(mod>0){
 if(etapa==="Antenatal"){
 resultado=mod===1
-?"1 factor: recomendaciones generales."
-:"2 o más: iniciar medidas no farmacológicas durante toda la gestación.";
+?"Recomendaciones generales."
+:"Iniciar medidas no farmacológicas durante toda la gestación.";
 }else{
 resultado=mod===1
-?"1 factor: recomendaciones generales."
-:"2 o más: tromboprofilaxis farmacológica por 10 días posparto.";
+?"Recomendaciones generales."
+:"Tromboprofilaxis farmacológica por 10 días posparto.";
 }
 }
 else if(hospMenor>0){
 resultado=etapa==="Antenatal"
-?"Tromboprofilaxis durante estancia."
-:"Al alta: Medidas NO farmacológicas por 10 días.";
+?"Durante la hospitalización: tromboprofilaxis con cualquier intervención farmacológica o no farmacológica Al alta: con medidas no farmacológicas por 10 días"
+:"Durante la hospitalización: tromboprofilaxis con cualquier intervención farmacológica o no farmacológica Al alta: con medidas no farmacológicas por 10 días";
 }
 
 /* 🟢 BAJO */
 else if(bajo>0){
 if(etapa==="Antenatal"){
-if(bajo<=2) resultado="1-2 factores: recomendaciones generales.";
-else if(bajo<=5) resultado="3-5 factores: iniciar medidas no farmacológicas desde el momento de su identificación.";
+if(bajo<=2) resultado="Recomendaciones generales.";
+else if(bajo<=5) resultado="Iniciar medidas no farmacológicas desde el momento de su identificación.";
 else resultado=">6 factores: iniciar desde el momento de su identificación medidas no farmacológicas e iniciar tromboprofilaxis farmacológica desde semana 28, a menos que exista contraindicación.";
 }else{
-if(bajo<=2) resultado="1-2 factores: recomendaciones generales.";
-else resultado="3 o más: 10 días de tromboprofilaxis con medidas farmacológicas.";
+if(bajo<=2) resultado="Recomendaciones generales.";
+else resultado="10 días de tromboprofilaxis con medidas farmacológicas.";
 }
 }
 else{
@@ -184,8 +187,10 @@ resultado="Sin criterios registrados.";
 fetch(urlScript,{
 method:"POST",
 body:new URLSearchParams({
-etapa:etapa,
-resultado:resultado
+episodio: Episodio,
+documento: Documento,
+etapa: etapa,
+resultado: resultado
 })
 })
 .then(()=>mostrar(resultado,false))
