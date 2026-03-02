@@ -25,6 +25,31 @@ button{margin-top:20px;padding:12px;width:100%;background:#0066cc;color:white;bo
 
 <form id="formRiesgo">
 
+<h2>Identificación</h2>
+
+<label>Episodio:
+  <input 
+    type="text" 
+    name="episodio" 
+    inputmode="numeric"
+    pattern="[0-9]{6,7}" 
+    maxlength="7"
+    required
+    placeholder="Máximo 7 dígitos">
+</label>
+
+<label>Documento de identidad:
+  <input 
+    type="text" 
+    name="documento" 
+    inputmode="numeric"
+    pattern="[0-9]{6,10}" 
+    maxlength="10"
+    required
+    placeholder="Máximo 10 dígitos">
+</label>
+
+  
 <h2>Etapa</h2>
 <label><input type="radio" name="etapa" value="Antenatal" required> Antenatal</label>
 <label><input type="radio" name="etapa" value="Posnatal"> Posnatal</label>
