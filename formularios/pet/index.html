@@ -171,8 +171,8 @@ mostrar("No aplica en antenatal.",true);return;
 }
 else if(hosp3>0){
 resultado=etapa==="Antenatal"
-?"Durante la hospitalización: tromboprofilaxis con medidas farmacológicas Al alta: tromboprofilaxis con medidas no farmacológicas por 28 días."
-:"Durante la hospitalización: tromboprofilaxis con medidas farmacológicas Al alta: tromboprofilaxis con medidas no farmacológicas por 28 días.";
+?"Durante la hospitalización: tromboprofilaxis con medidas farmacológicas. Al alta: tromboprofilaxis con medidas no farmacológicas por 28 días."
+:"Durante la hospitalización: tromboprofilaxis con medidas farmacológicas. Al alta: tromboprofilaxis con medidas no farmacológicas por 28 días.";
 }
 
 /* 🟡 MODERADO */
@@ -189,8 +189,8 @@ resultado=mod===1
 }
 else if(hospMenor>0){
 resultado=etapa==="Antenatal"
-?"Durante la hospitalización: tromboprofilaxis con cualquier intervención farmacológica o no farmacológica Al alta: con medidas no farmacológicas por 10 días"
-:"Durante la hospitalización: tromboprofilaxis con cualquier intervención farmacológica o no farmacológica Al alta: con medidas no farmacológicas por 10 días";
+?"Durante la hospitalización: tromboprofilaxis con cualquier intervención farmacológica o no farmacológica. Al alta: con medidas no farmacológicas por 10 días"
+:"Durante la hospitalización: tromboprofilaxis con cualquier intervención farmacológica o no farmacológica. Al alta: con medidas no farmacológicas por 10 días";
 }
 
 /* 🟢 BAJO */
@@ -198,7 +198,7 @@ else if(bajo>0){
 if(etapa==="Antenatal"){
 if(bajo<=2) resultado="Recomendaciones generales.";
 else if(bajo<=5) resultado="Iniciar medidas no farmacológicas desde el momento de su identificación.";
-else resultado=">6 factores: iniciar desde el momento de su identificación medidas no farmacológicas e iniciar tromboprofilaxis farmacológica desde semana 28, a menos que exista contraindicación.";
+else resultado="Iniciar desde el momento de su identificación medidas no farmacológicas e iniciar tromboprofilaxis farmacológica desde semana 28, a menos que exista contraindicación.";
 }else{
 if(bajo<=2) resultado="Recomendaciones generales.";
 else resultado="10 días de tromboprofilaxis con medidas farmacológicas.";
