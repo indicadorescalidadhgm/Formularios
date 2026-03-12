@@ -88,7 +88,7 @@
 </div>
 
 <script>
-const urlScript = "https://script.google.com/macros/s/AKfycbxcyszcj5jQ3YoEGdfUZLQMIYMGQNTNiSJ11xOMxnFtEdwcSFV2S6dCnmqrE60RQhrrcQ/exec";
+const urlScript = "https://script.google.com/macros/s/AKfycbwcyhfO8iV_qTPSp95Yk-3FXnwG2rXSlB1VrbH7IXD9gUWctVfSZOS-rAf8xGneGv-Euw/exec";
 
 // Función para limpiar mensaje al resetear
 document.getElementById("btnLimpiar").addEventListener("click", () => {
@@ -103,11 +103,20 @@ document.getElementById("formRiesgo").addEventListener("submit", function(e) {
     const documento = document.querySelector('input[name="documento"]').value.trim();
     const etapa = document.querySelector('input[name="etapa"]:checked')?.value;
 
-    // VALIDACIONES
-    if (!episodio) { mostrar("⚠️ Error: Ingrese el número de Episodio.", true); return; }
-    if (!documento) { mostrar("⚠️ Error: Ingrese el Documento.", true); return; }
-    if (!etapa) { mostrar("⚠️ Error: Seleccione etapa.", true); return; }
-
+    // --- VALIDACIONES DE IDENTIDAD ---
+    if (!episodio || episodio.length < 6) { 
+    mostrar("⚠️ El episodio debe tener entre 6 y 7 dígitos.", true); 
+    return; 
+    }
+    if (!documento || documento.length < 6) { 
+    mostrar("⚠️ El documento debe tener al menos 6 dígitos.", true); 
+    return; 
+    }
+    if (!etapa) { 
+    mostrar("⚠️ Seleccione la etapa (Antenatal/Posnatal).", true); 
+    return; 
+    }
+    
     // CONTEO
     const muyalto = document.querySelectorAll(".muyalto:checked").length;
     const grupoA = document.querySelectorAll(".grupoA:checked").length;
@@ -152,7 +161,12 @@ const textoFinal = `RIESGO ${nivel}<br>Medida: ${rec}`;
 
     fetch(urlScript, {
         method: "POST",
-        body: new URLSearchParams({ episodio, documento, etapa, riesgo: nivel, resultado: rec })
+        body: new URLSearchParams({ 
+            episodio: episodio, 
+            documento: documento, 
+            etapa: etapa, 
+            riesgo: nivel, 
+            resultado: rec })
     })
     .then(() => mostrar(textoFinal, false, color))
     .catch(() => mostrar("Error al guardar.", true));
