@@ -4,230 +4,166 @@
 <meta charset="UTF-8">
 <title>Evaluación Riesgo Tromboembólico</title>
 <style>
-body{font-family: 'Calibri Light', sans-serif; background:#f4f6f9; padding:40px; display:flex; justify-content:center;}
-.container{background:white; padding:30px; border-radius:10px; width:900px; box-shadow:0 4px 12px rgba(0,0,0,0.1);}
-.categoria{padding:12px; border-radius:6px; margin-bottom:15px;}
-label{display:block; margin:5px 0;}
-button{margin-top:20px; padding:12px; width:100%; background:#0066cc; color:white; border:none; border-radius:6px; cursor:pointer;}
-.resultado{margin-top:20px; padding:15px; border-radius:6px; display:none; font-weight:bold; border: 1px solid transparent;}
+    body{font-family: 'Calibri Light', sans-serif; background:#f4f6f9; padding:40px; display:flex; justify-content:center;}
+    .container{background:white; padding:30px; border-radius:10px; width:900px; box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+    .categoria{padding:12px; border-radius:6px; margin-bottom:15px;}
+    label{display:block; margin:5px 0; cursor: pointer;}
+    
+    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+    button { flex: 2; padding: 12px; background: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    button[type="reset"] { flex: 1; background: #6c757d; }
+    button:hover { opacity: 0.9; }
 
-/* Clases de colores dinámicos */
-.rojo { background:#f8d7da; color:#721c24; border-color:#f5c6cb; }
-.naranja { background:#ffe5b4; color:#856404; border-color:#ffeeba; }
-.amarillo { background:#fff3cd; color:#856404; border-color:#ffeeba; }
-.verde { background:#d4edda; color:#155724; border-color:#c3e6cb; }
-.error { background:#f8d7da; color:#721c24; border: 2px solid #dc3545; }
+    .resultado{margin-top:20px; padding:15px; border-radius:6px; display:none; font-weight:bold; border: 1px solid transparent;}
+
+    /* Clases de colores dinámicos */
+    .rojo { background:#f8d7da; color:#721c24; border-color:#f5c6cb; }
+    .naranja { background:#ffe5b4; color:#856404; border-color:#ffeeba; }
+    .amarillo { background:#fff3cd; color:#856404; border-color:#ffeeba; }
+    .verde { background:#d4edda; color:#155724; border-color:#c3e6cb; }
+    .error { background:#f8d7da; color:#721c24; border: 2px solid #dc3545; }
 </style>
 </head>
 <body>
 
 <div class="container">
-<h1>Evaluación de Riesgo Tromboembólico</h1>
+    <h1>Evaluación de Riesgo Tromboembólico</h1>
 
-<form id="formRiesgo">
+    <form id="formRiesgo" novalidate>
+        <h2>Identificación</h2>
+        <label>Episodio:
+            <input type="text" name="episodio" inputmode="numeric" pattern="[0-9]*" maxlength="7">
+        </label>
 
-<h2>Identificación</h2>
+        <label>Documento de identidad:
+            <input type="text" name="documento" inputmode="numeric" pattern="[0-9]*" maxlength="10">
+        </label>
 
-<label>Episodio:
-  <input 
-    type="text" 
-    name="episodio" 
-    inputmode="numeric"
-    pattern="[0-9]{6,7}" 
-    maxlength="7"
-    required>
-</label>
+        <h2>Etapa</h2>
+        <label><input type="radio" name="etapa" value="Antenatal"> Antenatal</label>
+        <label><input type="radio" name="etapa" value="Posnatal"> Posnatal</label>
 
-<label>Documento de identidad:
-  <input 
-    type="text" 
-    name="documento" 
-    inputmode="numeric"
-    pattern="[0-9]{6,10}" 
-    maxlength="10"
-    required>
-</label>
+        <h2>🔴 MUY ALTO</h2>
+        <div class="categoria rojo">
+            <label><input type="checkbox" class="muyalto"> Trombofilia heredada de muy alto riesgo</label>
+            <label><input type="checkbox" class="muyalto"> Trombofilia con EVT previo</label>
+            <label><input type="checkbox" class="muyalto"> EVT recurrente (2 o más)</label>
+        </div>
 
-  
-<h2>Etapa</h2>
-<label><input type="radio" name="etapa" value="Antenatal" required> Antenatal</label>
-<label><input type="radio" name="etapa" value="Posnatal"> Posnatal</label>
+        <h2>🟠 ALTO</h2>
+        <div class="categoria naranja">
+            <label><input type="checkbox" class="alto grupoA"> Obesidad mórbida (IMC > 40)</label>
+            <label><input type="checkbox" class="alto grupoA"> Trombofilia alto riesgo o SAAF</label>
+            <label><input type="checkbox" class="alto grupoA"> EVT previo</label>
+            <label><input type="checkbox" class="alto grupoA"> Enfermedad del colágeno (LES, AR)</label>
+            <label><input type="checkbox" class="alto grupoA"> Óbito</label>
+            <label><input type="checkbox" class="alto hiper"> Hiperestimulación ovárica</label>
+            <label><input type="checkbox" class="alto sepsis"> Sepsis puerperal</label>
+            <label><input type="checkbox" class="alto hosp3"> Hospitalización > 3 días</label>
+        </div>
 
-<h2>🔴 MUY ALTO</h2>
-<div class="categoria rojo">
-<label><input type="checkbox" class="muyalto"> Trombofilia heredada de muy alto riesgo</label>
-<label><input type="checkbox" class="muyalto"> Trombofilia adquirida o heredada con evento tromboembólico
-venoso previo (EVT).</label>
-<label><input type="checkbox" class="muyalto"> EVT recurrente (2 o más)</label>
-</div>
+        <h2>🟡 MODERADO</h2>
+        <div class="categoria amarillo">
+            <label><input type="checkbox" class="moderado acumMod"> Obesidad (IMC 30-39)</label>
+            <label><input type="checkbox" class="moderado acumMod"> Várices / Diabetes / Enf. Renal</label>
+            <label><input type="checkbox" class="moderado acumMod"> Embarazo múltiple / Preeclampsia</label>
+            <label><input type="checkbox" class="moderado acumMod"> Cesárea / Hemorragia posparto</label>
+            <label><input type="checkbox" class="moderado hospMenor"> Hospitalización < 3 días</label>
+        </div>
 
-<h2>🟠 ALTO</h2>
-<div class="categoria naranja">
-<label><input type="checkbox" class="alto grupoA"> Obesidad mórbida pregestacional (IMC > 40 kgm/m)</label>
-<label><input type="checkbox" class="alto grupoA"> Trombofilia alto riesgo o adquirida (SAAF)</label>
-<label><input type="checkbox" class="alto grupoA"> EVT previo</label>
-<label><input type="checkbox" class="alto grupoA"> Enfermedad del colágeno: lupus eritematoso
-sistémico, artritis reumatoidea, dermatomiositis.</label>
-<label><input type="checkbox" class="alto grupoA"> Óbito</label>
+        <h2>🟢 BAJO</h2>
+        <div class="categoria verde">
+            <label><input type="checkbox" class="bajo acumBajo"> Edad > 35 años / Sobrepeso IMC 25-30</label>
+            <label><input type="checkbox" class="bajo acumBajo"> Tabaquismo / HTA crónica</label>
+            <label><input type="checkbox" class="bajo acumBajo"> Inducción parto / Corioamnionitis / Viaje > 4h</label>
+        </div>
 
-<label><input type="checkbox" class="alto hiper"> Síndrome de hiperestimulación ovárica</label>
-<label><input type="checkbox" class="alto sepsis"> Sepsis puerperal</label>
-<label><input type="checkbox" class="alto hosp3"> Gestante o mujer en puerperio hospitalizada
-> 3 días</label>
-</div>
+        <div class="btn-group">
+            <button type="submit">Evaluar y Guardar</button>
+            <button type="reset" id="btnLimpiar">Limpiar</button>
+        </div>
+    </form>
 
-<h2>🟡 MODERADO</h2>
-<div class="categoria amarillo">
-<label><input type="checkbox" class="moderado acumMod"> Obesidad pregestacional (IMC > 30-39 kg/m2)</label>
-<label><input type="checkbox" class="moderado acumMod"> Várices en miembros inferiores</label>
-<label><input type="checkbox" class="moderado acumMod"> Diabetes tipo I y tipo II</label>
-<label><input type="checkbox" class="moderado acumMod"> Enfermedad renal preexistente</label>
-<label><input type="checkbox" class="moderado acumMod"> Técnicas de reproducción asistida</label>
-<label><input type="checkbox" class="moderado acumMod"> Embarazo múltiple</label>
-<label><input type="checkbox" class="moderado acumMod"> Hemorragia posparto</label>
-<label><input type="checkbox" class="moderado acumMod"> Preeclampsia</label>
-<label><input type="checkbox" class="moderado acumMod"> Hiperémesis gravídica (alteración hidroelectrolítica o parto pretérmino)</label>
-<label><input type="checkbox" class="moderado acumMod"> Cesárea</label>
-<label><input type="checkbox" class="moderado acumMod"> Sepsis durante el embarazo</label>
-<label><input type="checkbox" class="moderado acumMod"> Enfermedad inflamatoria intestinal</label>
-<label><input type="checkbox" class="moderado acumMod"> Procedimiento quirúrgico en embarazo o puerperio</label>
-<label><input type="checkbox" class="moderado acumMod"> Transfusión > 2 unidades</label>
-<label><input type="checkbox" class="moderado hospMenor"> Gestante o mujer en puerperio hospitalizada
-< 3 días</label>
-</div>
-
-<h2>🟢 BAJO</h2>
-<div class="categoria verde">
-<label><input type="checkbox" class="bajo acumBajo"> Edad > 35 años</label>
-<label><input type="checkbox" class="bajo acumBajo"> Sobrepeso pregestacional IMC 25-30 kg/m2</label>
-<label><input type="checkbox" class="bajo acumBajo"> Tabaquismo</label>
-<label><input type="checkbox" class="bajo acumBajo"> Hipertensión arterial crónica</label>
-<label><input type="checkbox" class="bajo acumBajo"> Hemorragia anteparto</label>
-<label><input type="checkbox" class="bajo acumBajo"> Inducción del trabajo de parto</label>
-<label><input type="checkbox" class="bajo acumBajo"> > 3 o más partos</label>
-<label><input type="checkbox" class="bajo acumBajo"> Corioamnionitis</label>
-<label><input type="checkbox" class="bajo acumBajo"> Viaje mayor de 4 horas</label>
-</div>
-
-<button type="submit">Evaluar y Guardar</button>
-
-</form>
-
-<div id="mensaje" class="resultado"></div>
-
+    <div id="mensaje" class="resultado"></div>
 </div>
 
 <script>
+const urlScript = "https://script.google.com/macros/s/AKfycbxcyszcj5jQ3YoEGdfUZLQMIYMGQNTNiSJ11xOMxnFtEdwcSFV2S6dCnmqrE60RQhrrcQ/exec";
 
-const urlScript="https://script.google.com/macros/s/AKfycbxcyszcj5jQ3YoEGdfUZLQMIYMGQNTNiSJ11xOMxnFtEdwcSFV2S6dCnmqrE60RQhrrcQ/exec";
-
-document.getElementById("formRiesgo").addEventListener("submit",function(e){
-e.preventDefault();
-
-const episodio = document.querySelector('input[name="episodio"]').value;
-const documento = document.querySelector('input[name="documento"]').value;
-
-const etapa=document.querySelector('input[name="etapa"]:checked')?.value;
-if(!etapa){mostrar("Seleccione etapa.",true);return;}
-
-const muyalto=document.querySelectorAll(".muyalto:checked").length;
-const grupoA=document.querySelectorAll(".grupoA:checked").length;
-const hiper=document.querySelectorAll(".hiper:checked").length;
-const sepsis=document.querySelectorAll(".sepsis:checked").length;
-const hosp3=document.querySelectorAll(".hosp3:checked").length;
-const mod=document.querySelectorAll(".acumMod:checked").length;
-const hospMenor=document.querySelectorAll(".hospMenor:checked").length;
-const bajo=document.querySelectorAll(".acumBajo:checked").length;
-
-let resultado="";
-
-/* 🔴 MUY ALTO */
-if(muyalto>0){
-resultado=etapa==="Antenatal"
-?"Anticoagulación desde identificación."
-:"Anticoagulación hasta al menos 6 semanas posparto.";
-}
-
-/* 🟠 ALTO */
-else if(grupoA>0){
-resultado=etapa==="Antenatal"
-?"Tromboprofilaxis farmacológica antenatal desde el momento de su identificación."
-:"Tromboprofilaxis farmacológica posnatal hasta 6 semanas posparto.";
-}
-else if(hiper>0){
-if(etapa==="Antenatal"){
-resultado="Tromboprofilaxis farmacológica en I trimestre y hasta que resuelva cuadro clínico.";
-}else{
-mostrar("No aplica en posnatal.",true);return;
-}
-}
-else if(sepsis>0){
-if(etapa==="Posnatal"){
-resultado="Tromboprofilaxis farmacológica por 10 días posterior al egreso.";
-}else{
-mostrar("No aplica en antenatal.",true);return;
-}
-}
-else if(hosp3>0){
-resultado=etapa==="Antenatal"
-?"Durante la hospitalización: tromboprofilaxis con medidas farmacológicas. Al alta: tromboprofilaxis con medidas no farmacológicas por 28 días."
-:"Durante la hospitalización: tromboprofilaxis con medidas farmacológicas. Al alta: tromboprofilaxis con medidas no farmacológicas por 28 días.";
-}
-
-/* 🟡 MODERADO */
-else if(mod>0){
-if(etapa==="Antenatal"){
-resultado=mod===1
-?"Recomendaciones generales."
-:"Iniciar medidas no farmacológicas durante toda la gestación.";
-}else{
-resultado=mod===1
-?"Recomendaciones generales."
-:"Tromboprofilaxis farmacológica por 10 días posparto.";
-}
-}
-else if(hospMenor>0){
-resultado=etapa==="Antenatal"
-?"Durante la hospitalización: tromboprofilaxis con cualquier intervención farmacológica o no farmacológica. Al alta: con medidas no farmacológicas por 10 días"
-:"Durante la hospitalización: tromboprofilaxis con cualquier intervención farmacológica o no farmacológica. Al alta: con medidas no farmacológicas por 10 días";
-}
-
-/* 🟢 BAJO */
-else if(bajo>0){
-if(etapa==="Antenatal"){
-if(bajo<=2) resultado="Recomendaciones generales.";
-else if(bajo<=5) resultado="Iniciar medidas no farmacológicas desde el momento de su identificación.";
-else resultado="Iniciar desde el momento de su identificación medidas no farmacológicas e iniciar tromboprofilaxis farmacológica desde semana 28, a menos que exista contraindicación.";
-}else{
-if(bajo<=2) resultado="Recomendaciones generales.";
-else resultado="10 días de tromboprofilaxis con medidas farmacológicas.";
-}
-}
-else{
-resultado="Sin criterios registrados.";
-}
-
-/* Guardar */
-fetch(urlScript,{
-method:"POST",
-body:new URLSearchParams({
-episodio: episodio,
-documento: documento,
-etapa: etapa,
-resultado: resultado
-})
-})
-.then(()=>mostrar(resultado,false))
-.catch(()=>mostrar("Error al guardar.",true));
+// Función para limpiar mensaje al resetear
+document.getElementById("btnLimpiar").addEventListener("click", () => {
+    const div = document.getElementById("mensaje");
+    div.style.display = "none";
 });
 
-function mostrar(t,e){
-const div=document.getElementById("mensaje");
-div.style.display="block";
-div.className="resultado "+(e?"error":"ok");
-div.textContent=t;
-}
+document.getElementById("formRiesgo").addEventListener("submit", function(e) {
+    e.preventDefault();
 
+    const episodio = document.querySelector('input[name="episodio"]').value.trim();
+    const documento = document.querySelector('input[name="documento"]').value.trim();
+    const etapa = document.querySelector('input[name="etapa"]:checked')?.value;
+
+    // VALIDACIONES
+    if (!episodio) { mostrar("⚠️ Error: Ingrese el número de Episodio.", true); return; }
+    if (!documento) { mostrar("⚠️ Error: Ingrese el Documento.", true); return; }
+    if (!etapa) { mostrar("⚠️ Error: Seleccione etapa.", true); return; }
+
+    // CONTEO
+    const muyalto = document.querySelectorAll(".muyalto:checked").length;
+    const grupoA = document.querySelectorAll(".grupoA:checked").length;
+    const hiper = document.querySelectorAll(".hiper:checked").length;
+    const sepsis = document.querySelectorAll(".sepsis:checked").length;
+    const hosp3 = document.querySelectorAll(".hosp3:checked").length;
+    const mod = document.querySelectorAll(".acumMod:checked").length;
+    const hospMenor = document.querySelectorAll(".hospMenor:checked").length;
+    const bajo = document.querySelectorAll(".acumBajo:checked").length;
+
+    let nivel = "BAJO"; let color = "verde"; let rec = "";
+
+    // LÓGICA DE RIESGO
+    if (muyalto > 0) {
+        nivel = "MUY ALTO"; color = "rojo";
+        rec = etapa === "Antenatal" ? "Anticoagulación desde identificación." : "Anticoagulación hasta 6 semanas posparto.";
+    } 
+    else if (grupoA > 0 || hiper > 0 || sepsis > 0 || hosp3 > 0) {
+        nivel = "ALTO"; color = "naranja";
+        if (grupoA > 0) rec = etapa === "Antenatal" ? "Farmacológica desde identificación." : "Farmacológica hasta 6 semanas.";
+        else if (hiper > 0) rec = (etapa === "Antenatal") ? "Farmacológica en I Trimestre hasta resolución." : "No aplica.";
+        else if (sepsis > 0) rec = (etapa === "Posnatal") ? "Farmacológica por 10 días tras egreso." : "No aplica.";
+        else rec = "Hosp: Farmacológica. Alta: No farmacológica por 28 días.";
+    } 
+    else if (mod > 0 || hospMenor > 0) {
+        nivel = "MODERADO"; color = "amarillo";
+        if (mod > 0) rec = mod === 1 ? "Recomendaciones generales." : (etapa === "Antenatal" ? "No farmacológica toda la gestación." : "Farmacológica 10 días.");
+        else rec = "Hosp: Farmacológica/No. Alta: No farmacológica 10 días.";
+    } 
+    else if (bajo > 0) {
+        nivel = "BAJO"; color = "verde";
+        if (etapa === "Antenatal") {
+            if (bajo <= 2) rec = "Recomendaciones generales.";
+            else if (bajo <= 5) rec = "No farmacológica desde identificación.";
+            else rec = "No farmacológica + Farmacológica desde semana 28.";
+        } else {
+            rec = bajo <= 2 ? "Recomendaciones generales." : "Farmacológica por 10 días.";
+        }
+    } else { rec = "Sin criterios registrados."; }
+
+    const textoFinal = `RIESGO ${nivel}: ${rec}`;
+
+    fetch(urlScript, {
+        method: "POST",
+        body: new URLSearchParams({ episodio, documento, etapa, riesgo: nivel, resultado: rec })
+    })
+    .then(() => mostrar(textoFinal, false, color))
+    .catch(() => mostrar("Error al guardar.", true));
+});
+
+function mostrar(t, e, c) {
+    const div = document.getElementById("mensaje");
+    div.style.display = "block";
+    div.className = "resultado " + (e ? "error" : c);
+    div.innerHTML = t;
+}
 </script>
 </body>
 </html>
