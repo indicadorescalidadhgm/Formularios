@@ -96,6 +96,9 @@ document.getElementById("btnLimpiar").addEventListener("click", () => {
     div.style.display = "none";
 });
 
+// Función para capitalizar (Ej: ALTO -> Alto)
+const capitalizar = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "";
+
 document.getElementById("formRiesgo").addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -103,79 +106,105 @@ document.getElementById("formRiesgo").addEventListener("submit", function(e) {
     const documento = document.querySelector('input[name="documento"]').value.trim();
     const etapa = document.querySelector('input[name="etapa"]:checked')?.value;
 
-    // --- VALIDACIONES DE IDENTIDAD ---
-    if (!episodio || episodio.length < 6) { 
-    mostrar("⚠️ El episodio debe tener entre 6 y 7 dígitos.", true); 
-    return; 
-    }
-    if (!documento || documento.length < 6) { 
-    mostrar("⚠️ El documento debe tener al menos 6 dígitos.", true); 
-    return; 
-    }
-    if (!etapa) { 
-    mostrar("⚠️ Seleccione la etapa (Antenatal/Posnatal).", true); 
-    return; 
-    }
-    
-    // CONTEO
-    const muyalto = document.querySelectorAll(".muyalto:checked").length;
-    const grupoA = document.querySelectorAll(".grupoA:checked").length;
-    const hiper = document.querySelectorAll(".hiper:checked").length;
-    const sepsis = document.querySelectorAll(".sepsis:checked").length;
-    const hosp3 = document.querySelectorAll(".hosp3:checked").length;
-    const mod = document.querySelectorAll(".acumMod:checked").length;
-    const hospMenor = document.querySelectorAll(".hospMenor:checked").length;
-    const bajo = document.querySelectorAll(".acumBajo:checked").length;
+    // VALIDACIONES DE CARACTERES
+    if (!episodio || episodio.length < 6) { mostrar("⚠️ El episodio debe tener entre 6 y 7 dígitos.", true); return; }
+    if (!documento || documento.length < 6) { mostrar("⚠️ El documento debe tener al menos 6 dígitos.", true); return; }
+    if (!etapa) { mostrar("⚠️ Seleccione la etapa (Antenatal/Posnatal).", true); return; }
 
-    let nivel = "BAJO"; let color = "verde"; let rec = "";
+    let nivel = ""; 
+    let color = ""; 
+    let rec = "";
 
-    // LÓGICA DE RIESGO
-    if (muyalto > 0) {
+    // Helper para saber si un checkbox está marcado
+    const isChecked = (cls) => document.querySelector(cls).checked;
+
+    // --- 1. EVALUAR MUY ALTO (ROJO) ---
+    if (document.querySelectorAll(".muyalto:checked").length > 0) {
         nivel = "MUY ALTO"; color = "rojo";
-        rec = etapa === "Antenatal" ? "Anticoagulación desde identificación." : "Anticoagulación hasta 6 semanas posparto.";
-    } 
-    else if (grupoA > 0 || hiper > 0 || sepsis > 0 || hosp3 > 0) {
-        nivel = "ALTO"; color = "naranja";
-        if (grupoA > 0) rec = etapa === "Antenatal" ? "Farmacológica desde identificación." : "Farmacológica hasta 6 semanas.";
-        else if (hiper > 0) rec = (etapa === "Antenatal") ? "Farmacológica en I Trimestre hasta resolución." : "No aplica.";
-        else if (sepsis > 0) rec = (etapa === "Posnatal") ? "Farmacológica por 10 días tras egreso." : "No aplica.";
-        else rec = "Hosp: Farmacológica. Alta: No farmacológica por 28 días.";
-    } 
-    else if (mod > 0 || hospMenor > 0) {
-        nivel = "MODERADO"; color = "amarillo";
-        if (mod > 0) rec = mod === 1 ? "Recomendaciones generales." : (etapa === "Antenatal" ? "No farmacológica toda la gestación." : "Farmacológica 10 días.");
-        else rec = "Hosp: Farmacológica/No. Alta: No farmacológica 10 días.";
-    } 
-    else if (bajo > 0) {
-        nivel = "BAJO"; color = "verde";
-        if (etapa === "Antenatal") {
-            if (bajo <= 2) rec = "Recomendaciones generales.";
-            else if (bajo <= 5) rec = "No farmacológica desde identificación.";
-            else rec = "No farmacológica + Farmacológica desde semana 28.";
-        } else {
-            rec = bajo <= 2 ? "Recomendaciones generales." : "Farmacológica por 10 días.";
+        rec = etapa === "Antenatal" ? "Anticoagulación desde identificación." : "Anticoagulación hasta al menos 6 semanas posparto.";
+    }
+
+    // --- 2. EVALUAR ALTO (NARANJA) ---
+    if (!rec) {
+        // Factores universales en ALTO
+        if (document.querySelectorAll(".grupoA:checked").length > 0) {
+            nivel = "ALTO"; color = "naranja";
+            rec = etapa === "Antenatal" ? "Tromboprofilaxis farmacológica antenatal desde el momento de su identificación." : "Tromboprofilaxis farmacológica posnatal hasta 6 semanas posparto.";
+        } 
+        else if (isChecked(".hosp3")) {
+            nivel = "ALTO"; color = "naranja";
+            rec = "Durante la hospitalización: farmacológica. Al alta: no farmacológica por 28 días.";
         }
-    } else { rec = "Sin criterios registrados."; }
+        // Factores condicionales en ALTO
+        else if (isChecked(".hiper") && etapa === "Antenatal") {
+            nivel = "ALTO"; color = "naranja";
+            rec = "Tromboprofilaxis farmacológica en I trimestre y hasta que resuelva cuadro clínico.";
+        }
+        else if (isChecked(".sepsis") && etapa === "Posnatal") {
+            nivel = "ALTO"; color = "naranja";
+            rec = "Tromboprofilaxis farmacológica por 10 días posterior al egreso.";
+        }
+    }
 
-const textoFinal = `RIESGO ${nivel}<br>Medida: ${rec}`;
+    // --- 3. EVALUAR MODERADO (AMARILLO) ---
+    if (!rec) {
+        const cantMod = document.querySelectorAll(".acumMod:checked").length;
+        if (cantMod > 0) {
+            nivel = "MODERADO"; color = "amarillo";
+            if (etapa === "Antenatal") {
+                rec = (cantMod === 1) ? "Recomendaciones generales." : "Iniciar medidas no farmacológicas durante toda la gestación.";
+            } else {
+                rec = (cantMod === 1) ? "Recomendaciones generales." : "Tromboprofilaxis farmacológica por 10 días posparto.";
+            }
+        } 
+        else if (isChecked(".hospMenor")) {
+            nivel = "MODERADO"; color = "amarillo";
+            rec = "Durante la hospitalización: farmacológica o no farmacológica. Al alta: no farmacológica por 10 días.";
+        }
+    }
 
+    // --- 4. EVALUAR BAJO (VERDE) ---
+    if (!rec) {
+        const cantBajo = document.querySelectorAll(".acumBajo:checked").length;
+        if (cantBajo > 0) {
+            nivel = "BAJO"; color = "verde";
+            if (etapa === "Antenatal") {
+                if (cantBajo <= 2) rec = "Recomendaciones generales.";
+                else if (cantBajo <= 5) rec = "Iniciar medidas no farmacológicas desde el momento de su identificación.";
+                else rec = "Medidas no farmacológicas + Farmacológica desde semana 28.";
+            } else {
+                rec = (cantBajo <= 2) ? "Recomendaciones generales." : "10 días de tromboprofilaxis con medidas farmacológicas.";
+            }
+        }
+    }
+
+    // --- 5. RESULTADO FINAL ---
+    if (!rec) {
+        nivel = "BAJO"; color = "verde";
+        rec = "Sin criterios registrados. Seguir recomendaciones generales.";
+    }
+
+    const respuestaPantalla = `RIESGO ${nivel}<br>Medida: ${rec}`;
+
+    // GUARDAR EN EXCEL
     fetch(urlScript, {
         method: "POST",
-        body: new URLSearchParams({ 
-            episodio: episodio, 
-            documento: documento, 
-            etapa: etapa, 
-            riesgo: nivel, 
-            resultado: rec })
+        body: new URLSearchParams({
+            episodio: episodio,
+            documento: documento,
+            etapa: capitalizar(etapa),
+            riesgo: capitalizar(nivel),
+            resultado: rec
+        })
     })
-    .then(() => mostrar(textoFinal, false, color))
-    .catch(() => mostrar("Error al guardar.", true));
+    .then(() => mostrar(respuestaPantalla, false, color))
+    .catch(() => mostrar("Error al conectar con el servidor.", true));
 });
 
-function mostrar(t, e, c) {
+function mostrar(t, error, c) {
     const div = document.getElementById("mensaje");
     div.style.display = "block";
-    div.className = "resultado " + (e ? "error" : c);
+    div.className = "resultado " + (error ? "error" : c);
     div.innerHTML = t;
 }
 </script>
